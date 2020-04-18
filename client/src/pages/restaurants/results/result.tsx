@@ -6,17 +6,27 @@ import { Button } from "baseui/button";
 export const Result: React.FC<{
   id: string;
   categories: Array<{ alias: string; title: string }>;
-  is_closed?: boolean;
   name: string;
   photos: Array<string>;
   price: string;
   rating: number;
 }> = (props) => {
-  const { categories, is_closed, name, photos, price, rating } = props;
+  const { categories, name, photos, price, rating } = props;
   const [value, setValue] = React.useState(rating);
   return (
     <Card
-      overrides={{ Root: { style: { border: "none", width: "328px" } } }}
+      overrides={{
+        HeaderImage: {
+          style: { height: "300px", minWidth: "100%" },
+        },
+        Root: {
+          style: {
+            border: "none",
+            width: "428px",
+            padding: "20px",
+          },
+        },
+      }}
       headerImage={photos[0]}
       title={name}
     >
@@ -26,9 +36,7 @@ export const Result: React.FC<{
         )}
       </StyledBody>
       <StarRating value={value} onChange={({ value }) => setValue(value)} />
-      <StyledBody>
-        {price} {is_closed ? "Closed" : "Open Now"}
-      </StyledBody>
+      <StyledBody>{price} Open Now</StyledBody>
       <StyledAction>
         <Button
           overrides={{

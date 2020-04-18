@@ -7,12 +7,18 @@ export const searchQuery = gql`
     $location: String
     $categories: String
     $price: String
+    $term: String
+    $offset: Int
+    $limit: Int
   ) {
     search(
       location: $location
       open_now: $open_now
       categories: $categories
       price: $price
+      term: $term
+      offset: $offset
+      limit: $limit
     ) {
       total
       business {

@@ -1,16 +1,24 @@
-import * as React from "react";
-import { RadioGroup, Radio, ALIGN } from "baseui/radio";
+import React, { useContext } from "react";
+import { Checkbox, LABEL_PLACEMENT } from "baseui/checkbox";
+import { SearchContext } from "../page";
 
 export const OpenNow: React.FC<{}> = ({}) => {
-  const [value, setValue] = React.useState("0");
+  const {
+    state: { openNow },
+    actions: { updateOpenNow },
+    dispatch,
+  } = useContext(SearchContext);
+
   return (
-    <RadioGroup
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      name="number"
-      align={ALIGN.horizontal}
+    <Checkbox
+      overrides={{ Root: { style: { alignItems: "center" } } }}
+      checked={openNow}
+      onChange={(e) => {
+        dispatch(updateOpenNow(e.currentTarget.checked));
+      }}
+      labelPlacement={LABEL_PLACEMENT.left}
     >
-      <Radio value="1">Open Now</Radio>
-    </RadioGroup>
+      Open Now
+    </Checkbox>
   );
 };

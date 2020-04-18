@@ -15,7 +15,8 @@ import Pages from "./pages";
 import injectStyles from "./styles";
 
 const engine = new Styletron();
-const token = "FIND_YOUR_OWN";
+const token =
+  "wmoCtDJTRBjZDwCTOZxydQB1DqjOu376YqZrexKNCk7YHRqrYhBeXR5JijCZO0taOkeIiBobIfs1aEKDsVRCY0efY0U_Wn_aai2FAHOHHJzpePwNYsK4mk6s_-WVXnYx";
 
 const httpLink = createHttpLink({
   uri: "/graphql",

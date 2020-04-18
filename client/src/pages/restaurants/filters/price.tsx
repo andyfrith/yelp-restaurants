@@ -1,32 +1,54 @@
-import * as React from "react";
-import { Button, KIND } from "baseui/button";
-import { ChevronDown } from "baseui/icon";
-import { StatefulPopover, PLACEMENT } from "baseui/popover";
-import { StatefulMenu } from "baseui/menu";
-const ITEMS = [
-  { label: "All" },
-  { label: "$" },
-  { label: "$$" },
-  { label: "$$$" },
-  { label: "$$$$" },
-];
+import React, { useContext } from "react";
+import { Button } from "baseui/button";
+import { ButtonGroup } from "baseui/button-group";
+import { SearchContext } from "../page";
 
-export const Price: React.FC<{}> = ({}) => (
-  <StatefulPopover
-    focusLock
-    placement={PLACEMENT.bottomLeft}
-    content={({ close }) => (
-      <StatefulMenu
-        items={ITEMS}
-        onItemSelect={() => close()}
-        overrides={{
-          List: { style: { height: "150px", width: "138px" } },
-        }}
-      />
-    )}
-  >
-    <Button kind={KIND.minimal} endEnhancer={() => <ChevronDown size={24} />}>
-      Price
+export const Price: React.FC<{}> = ({}) => {
+  const {
+    state: { price },
+    actions: { updatePrice },
+    dispatch,
+  } = useContext(SearchContext);
+
+  const button = (label: string) => (
+    <Button
+      overrides={{
+        BaseButton: {
+          style: {
+            width: "70px",
+            margin: "1px",
+          },
+        },
+      }}
+    >
+      {label}
     </Button>
-  </StatefulPopover>
-);
+  );
+
+  return (
+    <ButtonGroup
+      overrides={{
+        Root: {
+          style: {
+            backgroundColor: "white",
+            height: "50px",
+          },
+        },
+      }}
+      mode="checkbox"
+      selected={price}
+      onClick={(_event, index) => {
+        if (price && !price.includes(index)) {
+          dispatch(updatePrice([...price, index]));
+        } else {
+          dispatch(updatePrice(price!.filter((value) => value !== index)));
+        }
+      }}
+    >
+      {button("$")}
+      {button("$$")}
+      {button("$$$")}
+      {button("$$$$")}
+    </ButtonGroup>
+  );
+};

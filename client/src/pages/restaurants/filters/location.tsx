@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Input } from "baseui/input";
-import { SearchContext } from "../page";
+import { SearchContext } from "../../../pages";
 
 export const Location: React.FC<{}> = ({}) => {
   const {
@@ -11,10 +11,10 @@ export const Location: React.FC<{}> = ({}) => {
 
   return (
     <Input
-      clearable
-      value={location || ""}
+      value={"Arvada, CO"}
       onChange={(e) => dispatch(updateLocation(e.currentTarget.value))}
       placeholder="Location"
+      disabled={true}
     />
   );
 };

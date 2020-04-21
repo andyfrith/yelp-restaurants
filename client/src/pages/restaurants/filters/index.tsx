@@ -1,8 +1,8 @@
 import React, { useCallback, useContext } from "react";
 import { useStyletron } from "styletron-react";
 import { Button, KIND, SHAPE, SIZE } from "baseui/button";
-import { Label1 } from "baseui/typography";
-import { SearchContext } from "../page";
+import { LabelSmall } from "baseui/typography";
+import { SearchContext } from "../../../pages";
 import { Categories } from "./categories";
 import { Term } from "./term";
 import { Location } from "./location";
@@ -41,7 +41,7 @@ export const Filters: React.FC<{}> = (props) => {
             alignSelf: "center",
           })}
         >
-          <Label1 width="120px">Filter By:</Label1>
+          <LabelSmall width="120px">Filter By:</LabelSmall>
         </div>
         <OpenNow />
         <div

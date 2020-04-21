@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from "react";
 import { Select, TYPE, Value } from "baseui/select";
-import { Category } from "../search/searchReducer";
-import { SearchContext } from "../page";
+import { Category } from "../../../search/searchReducer";
+import { SearchContext } from "../../../pages";
 
 const OPTIONS = [
   // { id: "All", label: "All" },

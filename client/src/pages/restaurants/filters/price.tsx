@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "baseui/button";
 import { ButtonGroup } from "baseui/button-group";
-import { SearchContext } from "../page";
+import { SearchContext } from "../../../pages";
 
 export const Price: React.FC<{}> = ({}) => {
   const {

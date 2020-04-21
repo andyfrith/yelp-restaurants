@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Input } from "baseui/input";
-import { SearchContext } from "../page";
+import { SearchContext } from "../../../pages";
 
 export const Term: React.FC<{}> = ({}) => {
   const {

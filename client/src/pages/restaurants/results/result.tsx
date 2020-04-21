@@ -1,4 +1,5 @@
 import * as React from "react";
+import { navigate } from "@reach/router";
 import { Card, StyledBody, StyledAction } from "baseui/card";
 import { StarRating } from "baseui/rating";
 import { Button } from "baseui/button";
@@ -7,17 +8,21 @@ export const Result: React.FC<{
   id: string;
   categories: Array<{ alias: string; title: string }>;
   name: string;
+  number: number;
   photos: Array<string>;
   price: string;
   rating: number;
 }> = (props) => {
-  const { categories, name, photos, price, rating } = props;
+  const { categories, name, id, number, photos, price, rating } = props;
   const [value, setValue] = React.useState(rating);
   return (
     <Card
       overrides={{
         HeaderImage: {
           style: { height: "300px", minWidth: "100%" },
+        },
+        Title: {
+          style: { fontSize: "20px" },
         },
         Root: {
           style: {
@@ -28,7 +33,7 @@ export const Result: React.FC<{
         },
       }}
       headerImage={photos[0]}
-      title={name}
+      title={number + ". " + name}
     >
       <StyledBody>
         {categories.map((category, idx) =>
@@ -39,6 +44,7 @@ export const Result: React.FC<{
       <StyledBody>{price} Open Now</StyledBody>
       <StyledAction>
         <Button
+          onClick={() => navigate("/" + id)}
           overrides={{
             BaseButton: { style: { width: "100%" } },
           }}

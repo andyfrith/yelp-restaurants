@@ -1,13 +1,13 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { Button, KIND } from "baseui/button";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { BlockProps } from "baseui/block";
-import { Pagination } from "baseui/pagination";
+import { Pager } from "./pagination";
 import { H3 } from "baseui/typography";
 import { useStyletron } from "baseui";
 import { searchQuery } from "../../../graphql/queries/search";
-import { SearchContext } from "../page";
+import { SearchContext } from "../../../pages";
 import { Result } from "./result";
 
 const itemProps: BlockProps = {
@@ -33,26 +33,31 @@ export const Results: React.FC<{}> = () => {
   } = useContext(SearchContext);
 
   const [css, theme] = useStyletron();
+  const [offset, setOffset] = useState(0);
 
-  const { data, loading, error, fetchMore } = useQuery(searchQuery, {
-    variables: {
-      open_now: openNow,
-      offset: 0,
-      location,
-      // categories:
-      //   selectedCategories &&
-      //   selectedCategories.map((category) => category.label).toString(),
-      price: price && price.map((p) => p + 1).toString(),
-      term:
-        selectedCategories &&
-        selectedCategories[0] &&
-        selectedCategories[0].label
-          ? selectedCategories[0].label
-          : "",
-      limit,
-    },
-    fetchPolicy: "cache-and-network",
-  });
+  const { data, loading, error, refetch, networkStatus } = useQuery(
+    searchQuery,
+    {
+      variables: {
+        open_now: openNow,
+        offset,
+        location,
+        // categories:
+        //   selectedCategories &&
+        //   selectedCategories.map((category) => category.label).toString(),
+        price: price && price.map((p) => p + 1).toString(),
+        term:
+          selectedCategories &&
+          selectedCategories[0] &&
+          selectedCategories[0].label
+            ? selectedCategories[0].label
+            : "",
+        limit,
+      },
+      fetchPolicy: "cache-and-network",
+      notifyOnNetworkStatusChange: true,
+    }
+  );
 
   const runDispatch = useCallback(() => {
     if (data && data.search && data.search.business) {
@@ -60,14 +65,42 @@ export const Results: React.FC<{}> = () => {
       dispatch(
         updateResultsInfo({
           total: data.search.total!,
-          currentPage: resultsInfo!.currentPage || 1,
+          currentPage: Math.max(resultsInfo.currentPage, 1),
         })
       );
     }
-  }, [data, updateResults, updateResultsInfo, dispatch]);
+  }, [data, updateResults, updateResultsInfo, dispatch, setOffset]);
+
+  const loadMore = useCallback(
+    (nextPage: number) => {
+      const offset = 8 * (nextPage - 1);
+      dispatch(
+        updateResultsInfo({
+          total: resultsInfo.total!,
+          currentPage: nextPage,
+        })
+      );
+      setOffset(offset);
+      refetch({
+        open_now: openNow,
+        offset,
+        location,
+        price: price && price.map((p) => p + 1).toString(),
+        term:
+          selectedCategories &&
+          selectedCategories[0] &&
+          selectedCategories[0].label
+            ? selectedCategories[0].label
+            : "",
+        limit,
+      });
+    },
+    [dispatch, refetch, resultsInfo, setOffset, updateResultsInfo]
+  );
 
   useEffect(runDispatch, [data]);
 
+  if (networkStatus === 4) return <p>REFETCHING</p>;
   if (loading) return <p>LOADING</p>;
   if (error && !data) return <p>ERROR: {error}</p>;
 
@@ -93,10 +126,13 @@ export const Results: React.FC<{}> = () => {
         flexGridRowGap="scale800"
       >
         {results &&
-          results.map((item) => {
+          results.map((item, idx) => {
             return (
               <FlexGridItem key={item.id} {...itemProps}>
-                <Result {...item} />
+                <Result
+                  number={idx + (resultsInfo.currentPage - 1) * 8 + 1}
+                  {...item}
+                />
               </FlexGridItem>
             );
           })}
@@ -107,12 +143,10 @@ export const Results: React.FC<{}> = () => {
           margin: "80px auto",
         })}
       >
-        <Pagination
-          numPages={resultsInfo.total}
-          currentPage={resultsInfo!.currentPage}
-          // onPageChange={({ nextPage }) => {
-          //   // setCurrentPage(Math.min(Math.max(nextPage, 1), 20));
-          // }}
+        <Pager
+          currentPage={resultsInfo.currentPage}
+          numPages={Math.floor(resultsInfo.total / 8)}
+          onPageChange={loadMore}
         />
       </div>
       <div
@@ -122,27 +156,7 @@ export const Results: React.FC<{}> = () => {
         })}
       >
         <Button
-          onClick={() =>
-            fetchMore({
-              variables: {
-                offset: 8 * (resultsInfo.currentPage || 1),
-              },
-              updateQuery: (prev: any, { fetchMoreResult }) => {
-                if (!fetchMoreResult) return prev;
-                //debugger;
-                dispatch(updateResults(fetchMoreResult.search.business));
-                dispatch(
-                  updateResultsInfo({
-                    total: fetchMoreResult.search.business.length,
-                    currentPage: resultsInfo.currentPage + 1,
-                  })
-                );
-                // return Object.assign({}, prev, {
-                //   business: [...prev.business, ...fetchMoreResult.business],
-                // });
-              },
-            })
-          }
+          onClick={() => loadMore(resultsInfo.currentPage + 1)}
           kind={KIND.minimal}
           overrides={{
             BaseButton: {

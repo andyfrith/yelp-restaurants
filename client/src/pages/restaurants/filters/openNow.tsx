@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Checkbox, LABEL_PLACEMENT } from "baseui/checkbox";
-import { SearchContext } from "../page";
+import { SearchContext } from "../../../pages";
 
 export const OpenNow: React.FC<{}> = ({}) => {
   const {

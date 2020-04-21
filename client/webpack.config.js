@@ -15,7 +15,7 @@ module.exports = {
     port: 8080,
     historyApiFallback: true,
     proxy: {
-      "*": {
+      "/graphql": {
         context: ["/graphql"],
         target: "https://api.yelp.com/v3/graphql",
         changeOrigin: true,

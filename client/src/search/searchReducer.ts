@@ -47,7 +47,7 @@ export default function SearchReducer(
         results: [],
         resultsInfo: {
           total: 0,
-          currentPage: 0,
+          currentPage: 1,
         },
         selectedCategories: [],
         term: null,

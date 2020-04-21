@@ -8,6 +8,15 @@ export const businessPreviewFragment = gql`
     photos
     is_closed
     rating
+    url
+    display_phone
+    hours {
+      open {
+        day
+        end
+        start
+      }
+    }
     categories {
       title
       alias

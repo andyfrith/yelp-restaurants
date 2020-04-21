@@ -1,4 +1,4 @@
-<img src="https://github.com/andyfrith/yelp-restaurants/blob/master/screenshot1.png" alt="Movies" />
+<img src="https://github.com/andyfrith/yelp-restaurants/blob/master/screenshot1.png" alt="Restaurants" />
 
 # yelp-restaurants
 

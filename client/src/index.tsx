@@ -15,8 +15,7 @@ import Pages from "./pages";
 import injectStyles from "./styles";
 
 const engine = new Styletron();
-const token =
-  "wmoCtDJTRBjZDwCTOZxydQB1DqjOu376YqZrexKNCk7YHRqrYhBeXR5JijCZO0taOkeIiBobIfs1aEKDsVRCY0efY0U_Wn_aai2FAHOHHJzpePwNYsK4mk6s_-WVXnYx";
+const token = "YELP_TOKEN_GOES_HERE";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -36,22 +35,6 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
-
-// client
-//   .query({
-//     query: gql`
-//       {
-//         business(id: "garaje-san-francisco") {
-//           name
-//           id
-//           alias
-//           rating
-//           url
-//         }
-//       }
-//     `,
-//   })
-//   .then((result) => console.log(result));
 
 const App: React.FC = () => (
   <ApolloProvider client={client}>
